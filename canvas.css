@@ -1,0 +1,151 @@
+#canvas {
+    border: 5px solid black;
+    background-color: green;
+    width: 100vw;
+    height: 100vh;
+}
+img {
+    display: none;
+}
+#emptyHealthBar {
+    background-color: grey;
+    position: absolute;
+    bottom:0;
+    margin:20px;
+    width:500px;
+    height:50px
+}
+#filledHealthBar {
+    background-color: lightgreen;
+    width:100%;
+    height:100%;
+}
+#emptyXPBar {
+    background-color: grey;
+    position: absolute;
+    bottom:50px;
+    margin:20px;
+    width:500px;
+    height:50px
+}
+#filledXPBar {
+    background-color: blue;
+    width:0%;
+    height:100%;
+}
+h4 {
+    position: absolute;
+}
+#lvl {
+    position: absolute;
+    bottom: 110px;
+    margin: 10px;
+}
+#coins {
+    position: absolute;
+    color: yellow;
+    bottom: 150px;
+    margin: 10px;
+}
+#inventory {
+    position: absolute;
+    opacity: 0.8;
+    top:10vh;
+    left:10vw;
+    background-color: rgb(73, 73, 73);
+    border: 5px solid black;
+    display: none;
+    width: 80vw;
+    height: 80vh;
+    gap:10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+.item {
+    width:20%;
+    height:50%;
+    flex-shrink: 0;
+    background-color: gray;
+    
+}
+
+#stats {
+    position: absolute;
+    background-color: gray;
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    gap:10px;
+}
+.stat {
+    margin:20px;
+    background-color: lightgray;
+    width:300px;
+    height:150px;
+}
+.description {
+    position: relative;
+    bottom:20px
+}
+.upgradeStatButton {
+    background-color: green;
+    margin: 10px;
+    transition: 100ms;
+}
+
+.upgradeStatButton:hover {
+    transform: scale(1.1);
+} 
+#pauseMenu {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(30, 30, 30, 0.9);
+    color: white;
+    height:600px;
+    width:1000px;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    border-radius: 20px;
+    text-align: center;
+}
+
+#pauseMenu button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+#strength {
+    background-color: red;
+}
+
+#vitality {
+    background-color: lightgreen;
+}
+#keys {
+    position: absolute;
+    color:red;
+}
+#inventory button {
+    width: 16vw;
+}
+#gameAlert {
+    position: absolute;
+    top: 10vh;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    display: none;
+    z-index: 9999;
+}
