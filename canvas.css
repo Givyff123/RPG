@@ -78,6 +78,49 @@ h4 {
     height: 100vh;
     gap:10px;
 }
+#grandpaShop {
+    position: absolute;
+    background-color: gray;
+    display: none;
+    width: 80vw;
+    height: 80vh;
+    top:10vh;
+    left:10vw;
+    border-radius: 10vh;
+    gap:10px;
+}
+.grandpaShopItem {
+    background-color: rgb(86, 86, 86);
+    width:15vw;
+    min-height:30vh;
+    margin: 2vw;
+    padding:2vw;
+}
+#grandpaShopItems {
+    background-color: rgb(47, 47, 47);
+    position: absolute;
+    top:20vh;
+    left:10vw;
+    width:60vw;
+    height:50vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: scroll;
+}
+#closeGrandpaShopButton {
+    background-color: red;
+    position: absolute;
+    width:10vh;
+    height:10vh;
+    font-size: 10vh;
+    left:70vw;
+}
+
+#grandpaShop h1{
+    margin: 5vh;
+}
+
 .stat {
     margin:20px;
     background-color: lightgray;
