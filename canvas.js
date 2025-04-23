@@ -34,7 +34,7 @@ let selectedWeapon = ""
 let currentVersion = "1";
 
 if (localStorage.getItem("appVersion") !== currentVersion) {
-    localStorage.setItem("grandpaShop", ""); // This wipes old data
+    localStorage.removeItem("grandpaShop")
     localStorage.setItem("appVersion", currentVersion);
 }
 
