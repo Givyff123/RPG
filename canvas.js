@@ -138,36 +138,35 @@ let allWeapons = [
     }
 ]
 
-try {
-    let grandpaShop = JSON.parse(localStorage.getItem("grandpaShop")) 
-} catch (error) {
-    let grandpaShop = [
-        {
-            name:"test",
-            cost:100000,
-            type:"weapon",
-            item:allWeapons[5]
-        },
-        {
-            name:"STICK OF JUSTICE",
-            cost:5,
-            type:"weapon",
-            item:allWeapons[2]
-        },
-        {
-            name:"2ND ROW!!!!",
-            cost:0,
-            type:"weapon",
-            item:allWeapons[1]
-        },
-        {
-            name:"THIS IS ONLY HERE FOR A LIMITED TIME, SO GET IT BEFORE I REMOVE IT FROM THE SHOP",
-            cost:0,
-            type:"weapon",
-            item:allWeapons[6]
-        }
-    ]
-}
+
+let grandpaShop = JSON.parse(localStorage.getItem("grandpaShop")) || [
+    {
+        name:"test",
+        cost:100000,
+        type:"weapon",
+        item:allWeapons[5]
+    },
+    {
+        name:"STICK OF JUSTICE",
+        cost:5,
+        type:"weapon",
+        item:allWeapons[2]
+    },
+    {
+        name:"2ND ROW!!!!",
+        cost:0,
+        type:"weapon",
+        item:allWeapons[1]
+    },
+    {
+        name:"THIS IS ONLY HERE FOR A LIMITED TIME, SO GET IT BEFORE I REMOVE IT FROM THE SHOP",
+        cost:0,
+        type:"weapon",
+        item:allWeapons[6]
+    }
+]
+console.log(grandpaShop)
+
 
 
 
