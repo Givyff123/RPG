@@ -66,6 +66,8 @@ let speed = characterW / 2
 
 
 lvlDisplay.innerText = `LVL:  ${lvl}`
+strengthPointDisplay.innerText = `STR:  ${strength}`
+vitalityPointDisplay.innerText = `VIT:  ${vitality}`
 
 //weapon types
 let weapons = JSON.parse(localStorage.getItem("weapons")) || [
@@ -165,7 +167,7 @@ let grandpaShop = JSON.parse(localStorage.getItem("grandpaShop")) || [
         item:allWeapons[6]
     }
 ]
-console.log(grandpaShop)
+
 
 
 
@@ -268,7 +270,7 @@ function findSelectedWeapon() {
     return selectedWeapon
 }
 
-console.log(weapons[0])
+
 
 // making an enemy(in the works)
 function makeEnemy(selectedEnemy, x, y) {
@@ -346,6 +348,8 @@ function handleEnemyTouchingPlayer(selectedEnemy) {
         }
     })
 }
+
+// lvlDisplay
 
 function drawGrandpa(x, y) {
     ctx.imageSmoothingEnabled=false
