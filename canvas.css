@@ -60,6 +60,7 @@ h4 {
     gap:10px;
     flex-direction: row;
     flex-wrap: wrap;
+    overflow: scroll;
 
 }
 .item {
@@ -69,6 +70,8 @@ h4 {
     background-color: gray;
     
 }
+
+
 
 #stats {
     position: absolute;
