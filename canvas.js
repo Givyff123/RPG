@@ -10,6 +10,7 @@ let grandpa = document.querySelector("#grandpa")
 let toothBrushOfDestiny = document.querySelector("#toothBrush")
 let bed = document.querySelector("#bed")
 let zombie = document.querySelector("#zombie")
+let ghost = document.querySelector("#ghost")
 let healthBar = document.querySelector("#filledHealthBar")
 let MaxHealthBar = document.querySelector("#emptyHealthBar")
 let XPBar = document.querySelector("#filledXPBar")
@@ -29,6 +30,8 @@ let grandpaShopScreen = document.querySelector("#grandpaShop")
 let closeGrandpaShopButton = document.querySelector("#closeGrandpaShopButton")
 let grandpaShopItems = document.querySelector("#grandpaShopItems")
 let keys = document.querySelector("#keys")
+let lightSaber = document.querySelector("#lightsaber")
+
 let selectedWeapon = ""
 //wipes data if not current version
 let currentVersion = "1";
@@ -48,6 +51,7 @@ let backgroundMusic = new Audio("./music.mp3")
 let area = 1
 let allZombieStats = []
 let allSkeletonStats = []
+let allGhostStats = []
 let nextLevelRequirement = JSON.parse(localStorage.getItem("nextLvlReq")) || 50
 let gamePaused = false
 let openedStats = false
@@ -137,6 +141,14 @@ let allWeapons = [
         damage:1000000,
         soundEffect:sword,
         description:"very bad weapon guys, trust"
+    },
+    {
+        selected:false,
+        displayName:"Spirit Saber",
+        varName: lightSaber,
+        damage:6,
+        soundEffect:sword,
+        description:"Who you gonna call? GHO- (2007 TV be tweaking)"
     }
 ]
 
@@ -205,8 +217,8 @@ let enemies = [
     {
         name:"skeleton",
         varName:skeleton,
-        damage: 20,
-        hp:13,
+        damage: 40,
+        hp:10,
         w: 20,
         h: 25,
         xp:20,
@@ -214,6 +226,26 @@ let enemies = [
         drops:[
             {
                 name:"Stick of Justice",
+                chance:5,
+            },
+            {
+                name:"ULTIMATE WEAPON",
+                chance:0.1,
+            }
+        ]
+    },
+    {
+        name:"ghost",
+        varName:ghost,
+        damage: 40,
+        hp:40,
+        w: 20,
+        h: 25,
+        xp:60,
+        coinDrops:25,
+        drops:[
+            {
+                name:"Spirit Saber",
                 chance:5,
             }
         ]
@@ -318,24 +350,47 @@ function insertEnemy(selectedEnemy, x, y) {
 
     }
 
+    if(selectedEnemy=="ghost") {
+        enemies.forEach(enemy => {
+            if(enemy.name == selectedEnemy) {
+                allGhostStats.push({
+                    x:x,
+                    y:y,
+                    beforeX:x,
+                    beforeY:y,
+                    health:enemy.hp,
+                    xp:enemy.xp,
+                    coinDrops:enemy.coinDrops
+                
+                })
+            }
+        })
+
+    }
+
 }
 
 // the enemies when entering a new area
 function enterNewArea() {
     allZombieStats = []
     allSkeletonStats = []
+    allGhostStats = []
     if (area === 1) {
         insertEnemy("zombie", 210, 80)
         insertEnemy("zombie", 210, 20)
-    } else if (area === 2 ) {
+    } else if (area == 2 ) {
         insertEnemy("zombie", 180, 60)
         insertEnemy("zombie", 250, 40)
         insertEnemy("zombie", 200, 80)
-    } else if (area === 3 ) {
+    } else if (area == 3 ) {
         insertEnemy("skeleton", 180, 60)
         insertEnemy("skeleton", 250, 40)
         insertEnemy("skeleton", 200, 80)
         insertEnemy("skeleton", 140, 100)
+    } else if (area == 4) {
+        insertEnemy("ghost", 210, 50)
+        insertEnemy("ghost", 230, 70)
+        insertEnemy("ghost", 230, 30)
     }
 }
 
@@ -420,6 +475,9 @@ setInterval(() => {
         })
         allSkeletonStats.forEach(skeletonStats => {
             makeEnemy("skeleton", skeletonStats.x, skeletonStats.y)
+        })
+        allGhostStats.forEach(ghostStats => {
+            makeEnemy("ghost", ghostStats.x, ghostStats.y)
         })
     // moving to the next area
     if (characterX > canvas.width - characterW) {
@@ -551,15 +609,15 @@ setInterval(()=>{
             } else {
                 if (Math.abs(characterX - zombieStats.x) < 100 && Math.abs(characterY - zombieStats.y) < 100) {
                     if (characterX - zombieStats.x > 0) {
-                        zombieStats.x += characterW / 2
+                        zombieStats.x += characterW / 3
                     } else {
-                        zombieStats.x -= characterW / 2
+                        zombieStats.x -= characterW / 3
                     }
 
                     if (characterY - zombieStats.y > 0) {
-                        zombieStats.y += characterH / 2
+                        zombieStats.y += characterH / 3
                     } else {
-                        zombieStats.y -= characterH / 2
+                        zombieStats.y -= characterH / 3
                     }
                 }
             }
@@ -592,6 +650,39 @@ setInterval(()=>{
                         skeletonStats.y += characterH / 2
                     } else {
                         skeletonStats.y -= characterH / 2
+                    }
+                }
+            }
+        }
+    })
+
+    allGhostStats.forEach(ghostStats => {
+
+        if (!inHouse) {
+            if (Math.abs(characterX - ghostStats.x) < 10 && Math.abs(characterY - ghostStats.y) < 10) {
+                handleEnemyTouchingPlayer("skeleton")
+                if (playerHealth < 1) {
+                    canvas.style.backgroundColor = "burlywood"
+                    inHouse = true
+                    characterH = 32.8
+                    characterW = 20
+                    characterX = 60
+                    characterY = 30
+                    playerHealth = maxPlayerHealth
+                    
+                }
+            } else {
+                if (Math.abs(characterX - ghostStats.x) < 100 && Math.abs(characterY - ghostStats.y) < 100) {
+                    if (characterX - ghostStats.x > 0) {
+                        ghostStats.x += characterW / 1.5
+                    } else {
+                        ghostStats.x -= characterW / 1.5
+                    }
+
+                    if (characterY - ghostStats.y > 0) {
+                        ghostStats.y += characterH / 1.5
+                    } else {
+                        ghostStats.y -= characterH / 1.5
                     }
                 }
             }
@@ -734,7 +825,7 @@ function attack() {
         
         allZombieStats.forEach((zombieStats, i) => {
             if(Math.abs(characterX-zombieStats.x)<20 && Math.abs(characterY-zombieStats.y)<20) {
-                zombieStats.health-=selectedWeapon.damage*((strength/10)+1)
+                zombieStats.health-=selectedWeapon.damage*((strength/5)+1)
                 if(zombieStats.health<1 ) {
                     handleDrops("zombie")
                     xp+=zombieStats.xp
@@ -771,7 +862,7 @@ function attack() {
     
         allSkeletonStats.forEach((skeletonStats, i) => {
             if(Math.abs(characterX-skeletonStats.x)<20 && Math.abs(characterY-skeletonStats.y)<20) {
-                skeletonStats.health-=selectedWeapon.damage*((strength/10)+1)
+                skeletonStats.health-=selectedWeapon.damage*((strength/5)+1)
                 if(skeletonStats.health<1 ) {
                     handleDrops("skeleton")
                     xp+=skeletonStats.xp
@@ -798,6 +889,42 @@ function attack() {
                     setTimeout(()=>{
                         if(currentArea==area) {
                             insertEnemy("skeleton", skeletonBeforeXAndY[0], skeletonBeforeXAndY[1])
+                        }
+                    }, 4000)
+                }
+            }
+        })
+
+
+        allGhostStats.forEach((ghostStats, i) => {
+            if(Math.abs(characterX-ghostStats.x)<20 && Math.abs(characterY-ghostStats.y)<20) {
+                ghostStats.health-=selectedWeapon.damage*((strength/5)+1)
+                if(ghostStats.health<1 ) {
+                    handleDrops("ghost")
+                    xp+=ghostStats.xp
+                    coins+=ghostStats.coinDrops
+                    if(xp>=nextLevelRequirement) {
+                        xp=0
+                        XPBar.style.backgroundColor = "yellow"
+                        setTimeout(()=>{
+                            XPBar.style.backgroundColor = "blue"
+                            lvl+=1
+                            skillPoints+=1
+                            lvlDisplay.innerText = `LVL:${lvl}`
+                            nextLevelRequirement*=1.5
+                            XPBar.style.width = (xp)*(100/nextLevelRequirement) + "%"
+                        }, 1000)
+    
+                    }
+
+                    XPBar.style.width = (xp)*(100/nextLevelRequirement) + "%"
+                    let ghostBeforeXAndY = [ghostStats.beforeX, ghostStats.beforeY]
+                    console.ghostBeforeXAndY
+                    allGhostStats.splice(i, 1)
+                    let currentArea = area
+                    setTimeout(()=>{
+                        if(currentArea==area) {
+                            insertEnemy("ghost", ghostBeforeXAndY[0], ghostBeforeXAndY[1])
                         }
                     }, 4000)
                 }
