@@ -41,6 +41,9 @@ if (localStorage.getItem("appVersion") !== currentVersion) {
     localStorage.setItem("appVersion", currentVersion);
 }
 
+//the thing im rendering the stuff with
+let ctx = canvas.getContext("2d")
+
 // the variables
 let characterX = 50
 let characterY = 50
@@ -145,6 +148,14 @@ let allWeapons = [
     {
         selected:false,
         displayName:"Spirit Saber",
+        varName: lightSaber,
+        damage:6,
+        soundEffect:sword,
+        description:"Who you gonna call? GHO- (2007 TV be tweaking)"
+    },
+    {
+        selected:false,
+        displayName:"Iron Sword",
         varName: lightSaber,
         damage:6,
         soundEffect:sword,
@@ -264,8 +275,7 @@ setTimeout(()=>{
     keys.style.display = "none"
 }, 10000)
 
-//the thing im rendering the stuff with
-let ctx = canvas.getContext("2d")
+
 
 //drawing the character
 function drawCharacter(x, y) {
