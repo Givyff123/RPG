@@ -48,7 +48,7 @@ let backgroundMusic = new Audio("./music.mp3")
 let area = 1
 let allZombieStats = []
 let allSkeletonStats = []
-let nextLevelRequirement = 50
+let nextLevelRequirement = JSON.parse(localStorage.getItem("nextLvlReq")) || 50
 let gamePaused = false
 let openedStats = false
 let xp = 0
@@ -56,7 +56,7 @@ let lvl = JSON.parse(localStorage.getItem("lvl")) || 1
 let coins = JSON.parse(localStorage.getItem("coins")) || 0
 let strength = JSON.parse(localStorage.getItem("str")) || 0
 let vitality = JSON.parse(localStorage.getItem("vit")) || 0
-let skillPoints = 0
+let skillPoints = JSON.parse(localStorage.getItem("skillPoints")) || 0
 let maxPlayerHealth = JSON.parse(localStorage.getItem("maxHP")) || 100
 let playerHealth = maxPlayerHealth
 let attacking = false
@@ -65,7 +65,7 @@ let speed = characterW / 2
 
 
 
-
+lvlDisplay.innerText = `LVL:  ${lvl}`
 
 //weapon types
 let weapons = JSON.parse(localStorage.getItem("weapons")) || [
@@ -252,6 +252,7 @@ function attackAnimation() {
     ctx.drawImage(selectedWeapon.varName, characterX+characterW*9/10, characterY+characterW*3/20, characterW*7/7, characterW*7/7)
 }
 
+//finding the selected weapon
 function findSelectedWeapon() {
     let selectedWeapon = ""
     weapons.forEach((weapon) => {
@@ -402,6 +403,8 @@ setInterval(() => {
     localStorage.setItem("vit", JSON.stringify(vitality))
     localStorage.setItem("maxHP", JSON.stringify(maxPlayerHealth))
     localStorage.setItem("grandpaShop", JSON.stringify(grandpaShop))
+    localStorage.setItem("skillPoints", JSON.stringify(skillPoints))
+    localStorage.setItem("nextLvlReq", JSON.stringify(nextLevelRequirement))
     clearAll()
     healthBar.style.width = (playerHealth/maxPlayerHealth)*100 + "%"
     skillPointDisplay.innerText = `Skill Points: ${skillPoints}`
@@ -733,13 +736,13 @@ function attack() {
                     xp+=zombieStats.xp
                     coins+=zombieStats.coinDrops
                     if(xp>=nextLevelRequirement) {
-                        xp=0
                         XPBar.style.backgroundColor = "yellow"
                         setTimeout(()=>{
                             XPBar.style.backgroundColor = "blue"
                             lvl+=1
                             skillPoints+=1
                             lvlDisplay.innerText = `LVL:${lvl}`
+                            xp=0
                             nextLevelRequirement*=1.5
                             XPBar.style.width = (xp)*(100/nextLevelRequirement) + "%"
                         }, 1000)
