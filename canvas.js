@@ -4,6 +4,7 @@ let man = document.querySelector("#man")
 let house = document.querySelector("#house")
 let dullBlade = document.querySelector("#sword")
 let cupcake = document.querySelector("#cupcake")
+let zombieSword = document.querySelector("#zombieSword")
 let rubberChicken = document.querySelector("#rubberChicken")
 let stickOfJustice = document.querySelector("#stickOfJustice")
 let grandpa = document.querySelector("#grandpa")
@@ -31,15 +32,12 @@ let closeGrandpaShopButton = document.querySelector("#closeGrandpaShopButton")
 let grandpaShopItems = document.querySelector("#grandpaShopItems")
 let keys = document.querySelector("#keys")
 let lightSaber = document.querySelector("#lightsaber")
+let ironSword = document.querySelector("#ironSword")
+let gun = document.querySelector("#gun")
 
 let selectedWeapon = ""
 //wipes data if not current version
-let currentVersion = "1";
-
-if (localStorage.getItem("appVersion") !== currentVersion) {
-    localStorage.removeItem("grandpaShop")
-    localStorage.setItem("appVersion", currentVersion);
-}
+let currentVersion = "2"
 
 //the thing im rendering the stuff with
 let ctx = canvas.getContext("2d")
@@ -50,6 +48,7 @@ let characterY = 50
 let characterW = 10
 let characterH = 16.8 
 let sword = new Audio("./sword.mp3")
+let gunAudio = new Audio("./gun.mp3")
 let backgroundMusic = new Audio("./music.mp3")
 let area = 1
 let allZombieStats = []
@@ -77,7 +76,7 @@ strengthPointDisplay.innerText = `STR:  ${strength}`
 vitalityPointDisplay.innerText = `VIT:  ${vitality}`
 
 //weapon types
-let weapons = JSON.parse(localStorage.getItem("weapons")) || [
+let swords = JSON.parse(localStorage.getItem("swords")) || [
     {
         selected:true,
         displayName:"Dull Blade",
@@ -88,20 +87,23 @@ let weapons = JSON.parse(localStorage.getItem("weapons")) || [
 
 ]
 
-let allWeapons = [
+
+let allSwords = [
     {
         selected:true,
         displayName:"Dull Blade",
         varName: dullBlade,
         damage:1,
+        range:20,
         soundEffect:sword,
         description: `A simple dull blade you took from your grandpas house when he wasn't looking, he isn't happy`,
     },
     {
         selected:false,
         displayName:"Zombie Sword",
-        varName: dullBlade, 
+        varName: zombieSword, 
         damage: 2.25,
+        range:22,
         soundEffect:sword,
         description: `Bbbbraaaiiinnzzz`,
     },
@@ -109,7 +111,8 @@ let allWeapons = [
         selected: false,
         displayName: "Stick of Justice",
         varName: stickOfJustice,
-        damage: 2.5,
+        damage: 3.5,
+        range:10,
         soundEffect:sword,
         description: `The handle of the sword that once bonked Azureus the Fallen into the underworld, Hmmm, I wonder where the blade went...`,
     },
@@ -118,6 +121,7 @@ let allWeapons = [
         displayName: "Toothbrush of Destiny",
         varName: toothBrushOfDestiny,
         damage: 2,
+        range:20,
         soundEffect:sword,
         description: `Was originally made to clean teeth, now it cleans up battlefield...`,
     },
@@ -126,6 +130,7 @@ let allWeapons = [
         displayName: "Rubber Chicken",
         varName: rubberChicken, 
         damage: 1.5,
+        range:25,
         soundEffect:sword,
         description: `Quack.... wait is quack the correct noice? (im genuinely confused between ducks and chickens)`,
     },
@@ -133,7 +138,8 @@ let allWeapons = [
         selected:false,
         displayName:"cupcake",
         varName: cupcake,
-        damage:10000000000,
+        damage: Infinity,
+        range:20,
         soundEffect:sword,
         description: `I can really just make this as long as I want to so... Just kidding, I have no idea what to put here`,
     },
@@ -141,7 +147,8 @@ let allWeapons = [
         selected:false,
         displayName:"ULTIMATE WEAPON",
         varName: dullBlade,
-        damage:1000000,
+        damage: 1000000,
+        range:1,
         soundEffect:sword,
         description:"very bad weapon guys, trust"
     },
@@ -150,44 +157,67 @@ let allWeapons = [
         displayName:"Spirit Saber",
         varName: lightSaber,
         damage:6,
+        range:25,
         soundEffect:sword,
-        description:"Who you gonna call? GHO- (2007 TV be tweaking)"
+        description:"Who you gonna call? GHO- (2017 TV be tweaking) I have the high ground Anaki-! (2017 TV tweaks again) I've never watched star trek so no more references i guess"
     },
     {
         selected:false,
         displayName:"Iron Sword",
-        varName: lightSaber,
-        damage:6,
+        varName: ironSword,
+        damage:4.5,
+        range:15,
         soundEffect:sword,
-        description:"Who you gonna call? GHO- (2007 TV be tweaking)"
-    }
+        description:"CHICKEN JOCKEY!! (pulls out live chicken in theater)"
+    },
+    {
+        selected:false,
+        displayName:"Gun",
+        varName: gun,
+        damage:20,
+        range:120,
+        soundEffect: gunAudio,
+        description:"AMERICA!!(Eagle screeching noise)"
+    },
 ]
 
+//deleting the grandpa shop and editing the saved swords to the new versions
+if (localStorage.getItem("appVersion") !== currentVersion) {
+    localStorage.removeItem("grandpaShop")
+    replaceSwordsWithCurrentSwords()
+    localStorage.setItem("appVersion", currentVersion);
+}
 
 let grandpaShop = JSON.parse(localStorage.getItem("grandpaShop")) || [
     {
-        name:"test",
+        name:"cupcake",
         cost:100000,
         type:"weapon",
-        item:allWeapons[5]
+        item:allSwords[5]
     },
     {
         name:"STICK OF JUSTICE",
-        cost:5,
+        cost:70,
         type:"weapon",
-        item:allWeapons[2]
+        item:allSwords[2]
     },
     {
-        name:"2ND ROW!!!!",
-        cost:0,
+        name:"Brrraaaiiinnzzz",
+        cost:45,
         type:"weapon",
-        item:allWeapons[1]
+        item:allSwords[1]
     },
     {
         name:"THIS IS ONLY HERE FOR A LIMITED TIME, SO GET IT BEFORE I REMOVE IT FROM THE SHOP",
         cost:0,
         type:"weapon",
-        item:allWeapons[6]
+        item:allSwords[6]
+    },
+    {
+        name:"Iron Sword",
+        cost:125,
+        type:"weapon",
+        item:allSwords[8]
     }
 ]
 
@@ -201,7 +231,7 @@ let enemies = [
         name:"zombie",
         varName:zombie,
         damage: 10,
-        hp:15,
+        hp:10,
         w: 16,
         h: 20,
         xp:10,
@@ -229,7 +259,7 @@ let enemies = [
         name:"skeleton",
         varName:skeleton,
         damage: 40,
-        hp:10,
+        hp:8,
         w: 20,
         h: 25,
         xp:20,
@@ -257,7 +287,7 @@ let enemies = [
         drops:[
             {
                 name:"Spirit Saber",
-                chance:5,
+                chance:10,
             }
         ]
     }
@@ -268,6 +298,7 @@ let enemies = [
 insertEnemy("zombie", 210, 20)
 insertEnemy("zombie", 210, 80)
 insertEnemy("zombie", 210, 50)
+
 
 backgroundMusic.play()
 
@@ -292,6 +323,9 @@ function clearAll() {
 function attackAnimation() {
     ctx.imageSmoothingEnabled = false
     // console.log(selectedWeapon)
+    let sound = findSelectedWeapon().soundEffect
+    sound.currentTime=0
+    sound.play()
     let selectedWeapon = findSelectedWeapon()
     ctx.drawImage(selectedWeapon.varName, characterX+characterW*9/10, characterY+characterW*3/20, characterW*7/7, characterW*7/7)
 }
@@ -299,11 +333,11 @@ function attackAnimation() {
 //finding the selected weapon
 function findSelectedWeapon() {
     let selectedWeapon = ""
-    weapons.forEach((weapon) => {
+    swords.forEach((weapon) => {
         if(weapon.selected==true) {
-            allWeapons.forEach((allWeaponsWeapon, i) => {
-                if(allWeaponsWeapon.displayName == weapon.displayName) {
-                    selectedWeapon = allWeapons[i]
+            allSwords.forEach((allSwordsWeapon, i) => {
+                if(allSwordsWeapon.displayName == weapon.displayName) {
+                    selectedWeapon = allSwords[i]
 
                 }
             });
@@ -313,8 +347,32 @@ function findSelectedWeapon() {
 }
 
 
+function findSwordWithName(name) {
+    let selectedSword = ""
+    swords.forEach((sword) => {
+        if(sword.displayName==name) {
+            allSwords.forEach((allSwordsSword, i) => {
+                if(allSwordsSword.displayName == sword.displayName) {
+                    selectedSword = allSwords[i]
 
-// making an enemy(in the works)
+                }
+            });
+        }
+    });
+    return selectedSword
+}
+
+
+function replaceSwordsWithCurrentSwords() {
+    console.log(swords)
+    swords.forEach(sword => {
+        sword = findSwordWithName(sword.displayName)
+        console.log(findSwordWithName(sword.displayName))
+    });
+    return
+}
+
+// making an enemy
 function makeEnemy(selectedEnemy, x, y) {
         ctx.imageSmoothingEnabled = false
         enemies.forEach(enemy => {
@@ -414,6 +472,12 @@ function handleEnemyTouchingPlayer(selectedEnemy) {
     })
 }
 
+function getRandom(num1, num2) {
+    return Math.random(num2-num1)+num1
+}
+
+console.log(getRandom(5, 10))
+
 // lvlDisplay
 
 function drawGrandpa(x, y) {
@@ -465,7 +529,7 @@ setInterval(()=>{
 
 // renders the graphics every 1/10 of a second or 100 ms
 setInterval(() => {
-    localStorage.setItem("weapons", /*JSON.stringify(weapons)*/ JSON.stringify(weapons))
+    localStorage.setItem("swords", /*JSON.stringify(swords)*/ JSON.stringify(swords))
     localStorage.setItem("lvl", JSON.stringify(lvl))
     localStorage.setItem("coins", JSON.stringify(coins))
     localStorage.setItem("str", JSON.stringify(strength))
@@ -578,7 +642,7 @@ document.addEventListener("keydown", (e)=>{
                 }
                 else {
                     inventoryScreen.style.display = "flex"
-                    addWeapons()
+                    addSwords()
     
                 }
                 gamePaused = !gamePaused
@@ -772,12 +836,12 @@ document.addEventListener("keyup", ()=>{
     keysPressed={}
 })
 
-//displaying the weapons in the inventory
-function addWeapons() {
+//displaying the swords in the inventory
+function addSwords() {
     // clears inventory
     inventoryScreen.innerHTML = ""
 
-    weapons.forEach((weapon, i) => {
+    swords.forEach((weapon, i) => {
         if (weapon.selected) {
             inventoryScreen.innerHTML += `
                 <div class="item">
@@ -787,7 +851,7 @@ function addWeapons() {
                     <br><br>
                     <p>DMG: ${weapon.damage}</p>
                     <br>
-                    <p style="color:lightgreen;font-size:20px;position:absolute">[Equipped]</p>
+                    <p style="color:lightgreen;font-size:20px;position:relative;bottom:30px">[Equipped]</p>
                 </div>
             `
         } else {
@@ -810,11 +874,11 @@ function addWeapons() {
             let parent = button.closest(".item")
             let weaponIndex = parseInt(parent.dataset.index)
 
-            weapons.forEach((weapon, i) => {
+            swords.forEach((weapon, i) => {
                 weapon.selected = (i == weaponIndex)
             })
 
-            addWeapons()
+            addSwords()
         })
     })
 }
@@ -823,18 +887,11 @@ function addWeapons() {
 function attack() {
     if(attacking==false) {
 
-        let selectedWeapon = ""
-        weapons.forEach(weapon => {
-            if(weapon.selected==true) {
-                selectedWeapon = weapon
-            }
-        });
+        let selectedWeapon = findSelectedWeapon()
         attacking=true
-        sword.currentTime=0
-        sword.play()
         
         allZombieStats.forEach((zombieStats, i) => {
-            if(Math.abs(characterX-zombieStats.x)<20 && Math.abs(characterY-zombieStats.y)<20) {
+            if(Math.abs(characterX-zombieStats.x)<selectedWeapon.range && Math.abs(characterY-zombieStats.y)<selectedWeapon.range) {
                 zombieStats.health-=selectedWeapon.damage*((strength/5)+1)
                 if(zombieStats.health<1 ) {
                     handleDrops("zombie")
@@ -871,7 +928,7 @@ function attack() {
     
     
         allSkeletonStats.forEach((skeletonStats, i) => {
-            if(Math.abs(characterX-skeletonStats.x)<20 && Math.abs(characterY-skeletonStats.y)<20) {
+            if(Math.abs(characterX-skeletonStats.x)<selectedWeapon.range && Math.abs(characterY-skeletonStats.y)<selectedWeapon.range) {
                 skeletonStats.health-=selectedWeapon.damage*((strength/5)+1)
                 if(skeletonStats.health<1 ) {
                     handleDrops("skeleton")
@@ -907,7 +964,7 @@ function attack() {
 
 
         allGhostStats.forEach((ghostStats, i) => {
-            if(Math.abs(characterX-ghostStats.x)<20 && Math.abs(characterY-ghostStats.y)<20) {
+            if(Math.abs(characterX-ghostStats.x)<selectedWeapon.range && Math.abs(characterY-ghostStats.y)<selectedWeapon.range) {
                 ghostStats.health-=selectedWeapon.damage*((strength/5)+1)
                 if(ghostStats.health<1 ) {
                     handleDrops("ghost")
@@ -979,7 +1036,7 @@ function openGrandpaShop() {
             if(coins>=grandpaShop[i].cost) {
                 coins-=grandpaShop[i].cost
                 if(grandpaShop[i].type=="weapon") {
-                    weapons.push(grandpaShop[i].item)
+                    swords.push(grandpaShop[i].item)
                     grandpaShop.splice(i, 1)
                     closeGrandpaShop()
                     openGrandpaShop()
@@ -1006,13 +1063,12 @@ function handleDrops(enemyName) {
         if (enemy.name === enemyName) {
             enemy.drops.forEach(drop => {
                 let roll = Math.random() * 100
-                console.log(roll)
                 if (roll <= drop.chance) {
-                    let alreadyOwned = weapons.some(w => w.displayName === drop.name)
+                    let alreadyOwned = swords.some(w => w.displayName === drop.name)
                     if (!alreadyOwned) {
-                        let weaponData = allWeapons.find(w => w.displayName === drop.name)
+                        let weaponData = allSwords.find(w => w.displayName === drop.name)
                         if (weaponData) {
-                            weapons.push({...weaponData})
+                            swords.push({...weaponData})
                             showGameAlert(`You found: ${drop.name}!`)
                         }
                     }

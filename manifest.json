@@ -1,0 +1,10 @@
+{
+    "name": "RPG",
+    "description": "Epic RPG game! (this is my first rpg type game, please don't judge it :)",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "index.html",
+      "default_icon": "dullBlade.png"
+    }
+  }
