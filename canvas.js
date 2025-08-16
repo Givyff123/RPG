@@ -34,6 +34,7 @@ let keys = document.querySelector("#keys")
 let lightSaber = document.querySelector("#lightsaber")
 let ironSword = document.querySelector("#ironSword")
 let gun = document.querySelector("#gun")
+let keysPressed = {}
 
 let selectedWeapon = ""
 //wipes data if not current version
@@ -605,6 +606,23 @@ setInterval(() => {
 
 
     drawCharacter(characterX, characterY)
+
+
+    if (gamePaused==false) {
+        if (keysPressed["w"] || keysPressed["W"] || keysPressed["ArrowUp"]) {
+            characterY -= speed
+        }
+        if (keysPressed["s"] || keysPressed["S"] || keysPressed["ArrowDown"]) {
+            characterY += speed
+        }
+        if (keysPressed["a"] || keysPressed["A"] || keysPressed["ArrowLeft"]) {
+            characterX -= speed
+        }
+        if (keysPressed["d"] || keysPressed["D"] || keysPressed["ArrowRight"]) {
+            characterX += speed
+        }
+    
+    }
 }, 100)
 
 document.addEventListener("keydown", (e)=>{
@@ -806,34 +824,16 @@ resumeButton.addEventListener("click", ()=>{
 
 document.addEventListener('keydown', (e) => {
     e.preventDefault()
-    if(keysPressed==undefined) {
-        let keysPressed = []
-    }
-    else {
-        keysPressed[e.key] = true;
-    }
-    if (gamePaused==false) {
-        if (keysPressed["w"] || keysPressed["W"] || keysPressed["ArrowUp"]) {
-            characterY -= speed
-        }
-        if (keysPressed["s"] || keysPressed["S"] || keysPressed["ArrowDown"]) {
-            characterY += speed
-        }
-        if (keysPressed["a"] || keysPressed["A"] || keysPressed["ArrowLeft"]) {
-            characterX -= speed
-        }
-        if (keysPressed["d"] || keysPressed["D"] || keysPressed["ArrowRight"]) {
-            characterX += speed
-        }
-    
-    }
+    keysPressed[e.key] = true;
+    console.log(e.key)
 
 
 });
 
 //clearing your keys pressed once you let go so that you cant technically press "w" 100 times at once
-document.addEventListener("keyup", ()=>{
-    keysPressed={}
+document.addEventListener("keyup", (e)=>{
+    keysPressed[e.key] = false
+    console.log(e.key)
 })
 
 //displaying the swords in the inventory
